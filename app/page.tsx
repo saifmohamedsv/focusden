@@ -11,10 +11,10 @@ export default function Home() {
       flexDirection="column"
       gap="4"
     >
-      <Heading color="accent" size="2xl">
-        destract
+      <Heading color="accent" size="2xl" fontFamily="heading">
+        FocusDen
       </Heading>
-      <Text color="fg.muted" fontSize="lg">
+      <Text color="fg.secondary" fontSize="lg">
         Focus, Flow, Feel Good
       </Text>
     </Box>

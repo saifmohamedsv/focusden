@@ -2,13 +2,13 @@
 
 :root {
   /* Space palette CSS custom properties — overridden dynamically per space */
-  --color-bg-primary: #14130e;
-  --color-bg-secondary: #1e1c16;
-  --color-accent: #d4943a;
-  --color-accent-hover: #e8a32e;
-  --color-text-primary: #e8e0d0;
-  --color-text-secondary: #8a7a5e;
-  --color-border: #3a3428;
+  --color-bg-primary: #181713;
+  --color-bg-secondary: #221f18;
+  --color-accent: #C8894A;
+  --color-accent-hover: #d4a560;
+  --color-text-primary: #EDE5D0;
+  --color-text-secondary: #A89880;
+  --color-border: rgba(255, 255, 255, 0.07);
   --color-surface: #2a2620;
 
   /* Smooth transitions when switching spaces */
@@ -21,7 +21,7 @@
 body {
   background-color: var(--color-bg-primary);
   color: var(--color-text-primary);
-  font-family: "Inter", sans-serif;
+  font-family: "DM Sans", system-ui, sans-serif;
   overflow: hidden;
   height: 100vh;
 }

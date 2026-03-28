@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { DM_Sans, Lora } from "next/font/google";
 import { Providers } from "./providers";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const dmSans = DM_Sans({ subsets: ["latin"], variable: "--font-body" });
+const lora = Lora({ subsets: ["latin"], variable: "--font-display" });
 
 export const metadata: Metadata = {
-  title: "Destract — Focus, Flow, Feel Good",
+  title: "FocusDen — Focus, Flow, Feel Good",
   description:
     "A cozy focus platform with Pomodoro timer, ambient sounds, and a companion to keep you company while you work.",
 };
@@ -18,7 +19,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body className={`${dmSans.variable} ${lora.variable} ${dmSans.className}`}>
         <Providers>{children}</Providers>
       </body>
     </html>

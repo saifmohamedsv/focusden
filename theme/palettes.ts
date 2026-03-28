@@ -1,16 +1,18 @@
 import { SpacePalette } from "@/types";
 
+// Default palette — "Rainy Library" (warm olive/amber)
 export const defaultPalette: SpacePalette = {
-  bg_primary: "#14130e",
-  bg_secondary: "#1e1c16",
-  accent: "#d4943a",
-  accent_hover: "#e8a32e",
-  text_primary: "#e8e0d0",
-  text_secondary: "#8a7a5e",
-  border: "#3a3428",
+  bg_primary: "#181713",
+  bg_secondary: "#221f18",
+  accent: "#C8894A",
+  accent_hover: "#d4a560",
+  text_primary: "#EDE5D0",
+  text_secondary: "#A89880",
+  border: "rgba(255, 255, 255, 0.07)",
   surface: "#2a2620",
 };
 
+// Applies a space palette as CSS custom properties on :root
 export function applyPalette(palette: SpacePalette): void {
   const root = document.documentElement;
   root.style.setProperty("--color-bg-primary", palette.bg_primary);
@@ -23,6 +25,7 @@ export function applyPalette(palette: SpacePalette): void {
   root.style.setProperty("--color-surface", palette.surface);
 }
 
+// Each space defines its own palette override
 export const spacePalettes: Record<string, SpacePalette> = {
   "rainy-library": defaultPalette,
   "ocean-cabin": {
@@ -32,7 +35,7 @@ export const spacePalettes: Record<string, SpacePalette> = {
     accent_hover: "#5eb8d4",
     text_primary: "#d4e4ec",
     text_secondary: "#6a8a9e",
-    border: "#243440",
+    border: "rgba(255, 255, 255, 0.07)",
     surface: "#1a2830",
   },
   "mountain-lodge": {
@@ -42,7 +45,7 @@ export const spacePalettes: Record<string, SpacePalette> = {
     accent_hover: "#d98f4e",
     text_primary: "#e8ddd0",
     text_secondary: "#8a755e",
-    border: "#3a3020",
+    border: "rgba(255, 255, 255, 0.07)",
     surface: "#2a2418",
   },
   "zen-garden": {
@@ -52,7 +55,7 @@ export const spacePalettes: Record<string, SpacePalette> = {
     accent_hover: "#6bb87e",
     text_primary: "#d4e8da",
     text_secondary: "#6a9a7a",
-    border: "#243a2a",
+    border: "rgba(255, 255, 255, 0.07)",
     surface: "#1a2e20",
   },
   "sunset-desert": {
@@ -62,7 +65,7 @@ export const spacePalettes: Record<string, SpacePalette> = {
     accent_hover: "#e87e4e",
     text_primary: "#e8dcd4",
     text_secondary: "#9a7a6a",
-    border: "#3a2a22",
+    border: "rgba(255, 255, 255, 0.07)",
     surface: "#2e2018",
   },
   "midnight-city": {
@@ -72,7 +75,7 @@ export const spacePalettes: Record<string, SpacePalette> = {
     accent_hover: "#9488e8",
     text_primary: "#d8d4e8",
     text_secondary: "#7a7a9a",
-    border: "#2a2a3a",
+    border: "rgba(255, 255, 255, 0.07)",
     surface: "#1e1e2e",
   },
   "autumn-cafe": {
@@ -82,7 +85,7 @@ export const spacePalettes: Record<string, SpacePalette> = {
     accent_hover: "#d8984e",
     text_primary: "#e8dece",
     text_secondary: "#8a7a60",
-    border: "#3a3020",
+    border: "rgba(255, 255, 255, 0.07)",
     surface: "#2a2418",
   },
   "northern-cabin": {
@@ -92,7 +95,7 @@ export const spacePalettes: Record<string, SpacePalette> = {
     accent_hover: "#6ea0c0",
     text_primary: "#d4dee8",
     text_secondary: "#6a8090",
-    border: "#243038",
+    border: "rgba(255, 255, 255, 0.07)",
     surface: "#1a2830",
   },
 };

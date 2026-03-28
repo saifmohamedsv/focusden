@@ -2,9 +2,9 @@ import { defineRecipe } from "@chakra-ui/react";
 
 export const cardRecipe = defineRecipe({
   base: {
-    bg: "olive.900/60",
+    bg: "olive.700",
     border: "1px solid",
-    borderColor: "olive.700/50",
+    borderColor: "rgba(255, 255, 255, 0.07)",
     borderRadius: "xl",
     backdropFilter: "blur(8px)",
   },
@@ -12,7 +12,7 @@ export const cardRecipe = defineRecipe({
     variant: {
       default: {},
       elevated: {
-        boxShadow: "0 4px 24px rgba(0,0,0,0.3)",
+        boxShadow: "0 4px 16px rgba(0, 0, 0, 0.5)",
       },
     },
     size: {
