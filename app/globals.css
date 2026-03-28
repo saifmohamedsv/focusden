@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+:root {
+  /* Space palette CSS custom properties — overridden dynamically per space */
+  --color-bg-primary: #14130e;
+  --color-bg-secondary: #1e1c16;
+  --color-accent: #d4943a;
+  --color-accent-hover: #e8a32e;
+  --color-text-primary: #e8e0d0;
+  --color-text-secondary: #8a7a5e;
+  --color-border: #3a3428;
+  --color-surface: #2a2620;
+
+  /* Smooth transitions when switching spaces */
+  transition: --color-bg-primary 0.6s ease,
+    --color-bg-secondary 0.6s ease,
+    --color-accent 0.6s ease,
+    --color-text-primary 0.6s ease;
+}
+
+body {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: "Inter", sans-serif;
+  overflow: hidden;
+  height: 100vh;
+}
