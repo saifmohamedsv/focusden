@@ -1,0 +1,208 @@
+
+<style>
+  .roadmap { font-family: var(--font-sans); padding: 1.5rem 0; }
+  .phase { margin-bottom: 1.5rem; border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); overflow: hidden; }
+  .phase-header { display: flex; align-items: center; gap: 12px; padding: 14px 18px; cursor: pointer; background: var(--color-background-secondary); user-select: none; }
+  .phase-num { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; flex-shrink: 0; }
+  .phase-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); flex: 1; }
+  .phase-meta { font-size: 12px; color: var(--color-text-secondary); }
+  .phase-arrow { font-size: 12px; color: var(--color-text-tertiary); transition: transform 0.2s; }
+  .phase-arrow.open { transform: rotate(90deg); }
+  .phase-body { display: none; padding: 4px 0 8px; }
+  .phase-body.open { display: block; }
+  .task { display: flex; align-items: flex-start; gap: 10px; padding: 8px 18px; }
+  .task:hover { background: var(--color-background-secondary); }
+  .task-dot { width: 6px; height: 6px; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
+  .task-content { flex: 1; }
+  .task-name { font-size: 13px; color: var(--color-text-primary); }
+  .task-desc { font-size: 12px; color: var(--color-text-secondary); margin-top: 2px; }
+  .badge { display: inline-block; font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 20px; margin-left: 6px; vertical-align: middle; }
+  .b-critical { background: #FCEBEB; color: #A32D2D; }
+  .b-high { background: #FAEEDA; color: #854F0B; }
+  .b-medium { background: #E1F5EE; color: #0F6E56; }
+  .b-low { background: #EEEDFE; color: #3C3489; }
+  .divider { height: 0.5px; background: var(--color-border-tertiary); margin: 4px 0; }
+  .progress-bar { height: 3px; background: var(--color-border-tertiary); }
+  .progress-fill { height: 100%; border-radius: 0; transition: width 0.3s; }
+  .legend { display: flex; gap: 16px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--color-text-secondary); }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+</style>
+
+<div class="roadmap">
+  <div class="legend">
+    <span class="legend-item"><span class="legend-dot" style="background:#E24B4A"></span>Critical — ship first</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#EF9F27"></span>High — core experience</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#1D9E75"></span>Medium — polish</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#7F77DD"></span>Low — nice to have</span>
+  </div>
+
+  <!-- Phase 0 -->
+  <div class="phase">
+    <div class="progress-bar"><div class="progress-fill" style="width:100%;background:#1D9E75"></div></div>
+    <div class="phase-header" onclick="toggle(this)">
+      <div class="phase-num" style="background:#E1F5EE;color:#0F6E56">0</div>
+      <span class="phase-title">Foundation & setup</span>
+      <span class="phase-meta">Week 1 · 5 tasks</span>
+      <span class="phase-arrow">▶</span>
+    </div>
+    <div class="phase-body">
+      <div class="task"><div class="task-dot" style="background:#E24B4A"></div><div class="task-content"><div class="task-name">Init Next.js 15 project with App Router<span class="badge b-critical">critical</span></div><div class="task-desc">npx create-next-app — enable TypeScript, Tailwind, App Router. Set up Vercel project and link GitHub repo.</div></div></div>
+      <div class="task"><div class="task-dot" style="background:#E24B4A"></div><div class="task-content"><div class="task-name">Install core dependencies<span class="badge b-critical">critical</span></div><div class="task-desc">Chakra UI v3, Framer Motion, Zustand, Howler.js, NextAuth.js v5, Supabase JS client.</div></div></div>
+      <div class="task"><div class="task-dot" style="background:#E24B4A"></div><div class="task-content"><div class="task-name">Set up Supabase project<span class="badge b-critical">critical</span></div><div class="task-desc">Create free project, enable Google OAuth, define schema (users, spaces, sessions tables), set up RLS policies.</div></div></div>
+      <div class="task"><div class="task-dot" style="background:#EF9F27"></div><div class="task-content"><div class="task-name">Configure environment variables<span class="badge b-high">high</span></div><div class="task-desc">SUPABASE_URL, SUPABASE_ANON_KEY, NEXTAUTH_SECRET, GOOGLE_CLIENT_ID/SECRET, UNSPLASH_ACCESS_KEY.</div></div></div>
+      <div class="task"><div class="task-dot" style="background:#EF9F27"></div><div class="task-content"><div class="task-name">Define folder structure & conventions<span class="badge b-high">high</span></div><div class="task-desc">app/, components/, lib/, store/, hooks/, types/, public/sounds/ — agree on naming before writing features.</div></div></div>
+    </div>
+  </div>
+
+  <!-- Phase 1 -->
+  <div class="phase">
+    <div class="progress-bar"><div class="progress-fill" style="width:0%;background:#7F77DD"></div></div>
+    <div class="phase-header" onclick="toggle(this)">
+      <div class="phase-num" style="background:#EEEDFE;color:#3C3489">1</div>
+      <span class="phase-title">Auth & user identity</span>
+      <span class="phase-meta">Week 1–2 · 4 tasks</span>
+      <span class="phase-arrow">▶</span>
+    </div>
+    <div class="phase-body">
+      <div class="task"><div class="task-dot" style="background:#E24B4A"></div><div class="task-content"><div class="task-name">NextAuth.js Google provider<span class="badge b-critical">critical</span></div><div class="task-desc">Wire up /app/api/auth/[...nextauth]/route.ts. Test sign-in, session persistence, and redirect flows.</div></div></div>
+      <div class="task"><div class="task-dot" style="background:#E24B4A"></div><div class="task-content"><div class="task-name">Sync auth user to Supabase<span class="badge b-critical">critical</span></div><div class="task-desc">On first login, upsert user row via Supabase. Store google_id, email, and created_at.</div></div></div>
+      <div class="task"><div class="task-dot" style="background:#EF9F27"></div><div class="task-content"><div class="task-name">Auth-gated layout & middleware<span class="badge b-high">high</span></div><div class="task-desc">Redirect unauthenticated users to a landing/login page. Protect /app/* routes using Next.js middleware.</div></div></div>
+      <div class="task"><div class="task-dot" style="background:#1D9E75"></div><div class="task-content"><div class="task-name">Landing page with sign-in CTA<span class="badge b-medium">medium</span></div><div class="task-desc">Simple cozy landing: hero text, one screenshot, Google sign-in button. First impression matters.</div></div></div>
+    </div>
+  </div>
+
+  <!-- Phase 2 -->
+  <div class="phase">
+    <div class="progress-bar"><div class="progress-fill" style="width:0%;background:#7F77DD"></div></div>
+    <div class="phase-header" onclick="toggle(this)">
+      <div class="phase-num" style="background:#FAEEDA;color:#854F0B">2</div>
+      <span class="phase-title">Zustand store & offline persistence</span>
+      <span class="phase-meta">Week 2 · 3 tasks</span>
+      <span class="phase-arrow">▶</span>
+    </div>
+    <div class="phase-body">
+      <div class="task"><div class="task-dot" style="background:#E24B4A"></div><div class="task-content"><div class="task-name">Define Zustand store shape<span class="badge b-critical">critical</span></div><div class="task-desc">Slices: activeSpace, timerState, notes, todos, soundConfig {track, volume}, companionState. Type everything with TypeScript.</div></div></div>
+      <div class="task"><div class="task-dot" style="background:#E24B4A"></div><div class="task-content"><div class="task-name">IndexedDB persistence middleware<span class="badge b-critical">critical</span></div><div class="task-desc">Use zustand/middleware persist with idb-keyval as storage. Session state survives refresh & offline.</div></div></div>
+      <div class="task"><div class="task-dot" style="background:#EF9F27"></div><div class="task-content"><div class="task-name">Store hydration guard<span class="badge b-high">high</span></div><div class="task-desc">Prevent SSR/client mismatch using a hasHydrated flag. Block renders until store is loaded from IndexedDB.</div></div></div>
+    </div>
+  </div>
+
+  <!-- Phase 3 -->
+  <div class="phase">
+    <div class="progress-bar"><div class="progress-fill" style="width:0%;background:#7F77DD"></div></div>
+    <div class="phase-header" onclick="toggle(this)">
+      <div class="phase-num" style="background:#FAEEDA;color:#854F0B">3</div>
+      <span class="phase-title">Spaces: API + wallpaper system</span>
+      <span class="phase-meta">Week 2–3 · 5 tasks</span>
+      <span class="phase-arrow">▶</span>
+    </div>
+    <div class="phase-body">
+      <div class="task"><div class="task-dot" style="background:#E24B4A"></div><div class="task-content"><div class="task-name">Seed space catalog in Supabase<span class="badge b-critical">critical</span></div><div class="task-desc">Insert 8–10 hand-curated spaces: id, name, category, unsplash_photo_id, blur_hash, default_sounds, palette, companion_theme.</div></div></div>
+      <div class="task"><div class="task-dot" style="background:#E24B4A"></div><div class="task-content"><div class="task-name">GET /api/spaces — edge-cached catalog<span class="badge b-critical">critical</span></div><div class="task-desc">Route handler fetching from Supabase, returning catalog. Add Cache-Control: s-maxage=3600 for Vercel edge caching.</div></div></div>
+      <div class="task"><div class="task-dot" style="background:#E24B4A"></div><div class="task-content"><div class="task-name">Space selection UI + blur-hash preview<span class="badge b-critical">critical</span></div><div class="task-desc">Grid of space cards. Show blur-hash placeholder instantly, fade in Unsplash image on load. Framer Motion crossfade on switch.</div></div></div>
+      <div class="task"><div class="task-dot" style="background:#EF9F27"></div><div class="task-content"><div class="task-name">GET /api/spaces/:id<span class="badge b-high">high</span></div><div class="task-desc">Fetch single space config. Used when user loads their saved preferred space on login.</div></div></div>
+      <div class="task"><div class="task-dot" style="background:#1D9E75"></div><div class="task-content"><div class="task-name">Dynamic palette tinting<span class="badge b-medium">medium</span></div><div class="task-desc">Apply space palette to CSS custom properties on space switch. UI accent color, surface color morph smoothly.</div></div></div>
+    </div>
+  </div>
+
+  <!-- Phase 4 -->
+  <div class="phase">
+    <div class="progress-bar"><div class="progress-fill" style="width:0%;background:#7F77DD"></div></div>
+    <div class="phase-header" onclick="toggle(this)">
+      <div class="phase-num" style="background:#FAEEDA;color:#854F0B">4</div>
+      <span class="phase-title">Core focus session UI</span>
+      <span class="phase-meta">Week 3–4 · 6 tasks</span>
+      <span class="phase-arrow">▶</span>
+    </div>
+    <div class="phase-body">
+      <div class="task"><div class="task-dot" style="background:#E24B4A"></div><div class="task-content"><div class="task-name">Pomodoro timer component<span class="badge b-critical">critical</span></div><div class="task-desc">useTimer hook with useRef interval. States: idle, running, paused, break. Configurable work/break lengths. SVG ring progress.</div></div></div>
+      <div class="task"><div class="task-dot" style="background:#E24B4A"></div><div class="task-content"><div class="task-name">Notes panel (rich plain text)<span class="badge b-critical">critical</span></div><div class="task-desc">Lightweight contenteditable or textarea — no heavy editor. Auto-saves to Zustand on change. Persists in IndexedDB.</div></div></div>
+      <div class="task"><div class="task-dot" style="background:#E24B4A"></div><div class="task-content"><div class="task-name">Todo list component<span class="badge b-critical">critical</span></div><div class="task-desc">Add/check/delete todos. Drag to reorder (dnd-kit). Count completed todos for session stats. Store in Zustand.</div></div></div>
+      <div class="task"><div class="task-dot" style="background:#EF9F27"></div><div class="task-content"><div class="task-name">Mood check-in modal<span class="badge b-high">high</span></div><div class="task-desc">4-option mood picker shown before first Pomodoro of a session. Adjusts default sound preset and Pomodoro length.</div></div></div>
+      <div class="task"><div class="task-dot" style="background:#EF9F27"></div><div class="task-content"><div class="task-name">Project name input<span class="badge b-high">high</span></div><div class="task-desc">Simple text field at session start. Stored in Zustand, saved with session stats at the end.</div></div></div>
+      <div class="task"><div class="task-dot" style="background:#1D9E75"></div><div class="task-content"><div class="task-name">"I need 5 minutes" quick-start<span class="badge b-medium">medium</span></div><div class="task-desc">Single prominent button. No mood check-in, no project input. Starts a 5-min Pomodoro in the last used space instantly.</div></div></div>
+    </div>
+  </div>
+
+  <!-- Phase 5 -->
+  <div class="phase">
+    <div class="progress-bar"><div class="progress-fill" style="width:0%;background:#7F77DD"></div></div>
+    <div class="phase-header" onclick="toggle(this)">
+      <div class="phase-num" style="background:#E1F5EE;color:#0F6E56">5</div>
+      <span class="phase-title">Ambient audio system</span>
+      <span class="phase-meta">Week 4 · 4 tasks</span>
+      <span class="phase-arrow">▶</span>
+    </div>
+    <div class="phase-body">
+      <div class="task"><div class="task-dot" style="background:#E24B4A"></div><div class="task-content"><div class="task-name">Add sound files to public/sounds/<span class="badge b-critical">critical</span></div><div class="task-desc">Source free-license loops: rain, waves, cafe, fire, delta/theta binaural, forest. Target 2–4MB per file, .mp3 format.</div></div></div>
+      <div class="task"><div class="task-dot" style="background:#E24B4A"></div><div class="task-content"><div class="task-name">Howler.js audio manager hook<span class="badge b-critical">critical</span></div><div class="task-desc">useAudio hook: load all tracks on space mount, play/pause per track, per-track volume, crossfade on space switch.</div></div></div>
+      <div class="task"><div class="task-dot" style="background:#EF9F27"></div><div class="task-content"><div class="task-name">Sound mixer UI panel<span class="badge b-high">high</span></div><div class="task-desc">Row of sound toggles each with an individual volume slider. Config stored in Zustand soundConfig. Persists between sessions.</div></div></div>
+      <div class="task"><div class="task-dot" style="background:#1D9E75"></div><div class="task-content"><div class="task-name">Space default sound presets<span class="badge b-medium">medium</span></div><div class="task-desc">When a new space is loaded, apply its default_sounds config to soundConfig. User can override manually.</div></div></div>
+    </div>
+  </div>
+
+  <!-- Phase 6 -->
+  <div class="phase">
+    <div class="progress-bar"><div class="progress-fill" style="width:0%;background:#7F77DD"></div></div>
+    <div class="phase-header" onclick="toggle(this)">
+      <div class="phase-num" style="background:#E1F5EE;color:#0F6E56">6</div>
+      <span class="phase-title">Companion figurine</span>
+      <span class="phase-meta">Week 4–5 · 3 tasks</span>
+      <span class="phase-arrow">▶</span>
+    </div>
+    <div class="phase-body">
+      <div class="task"><div class="task-dot" style="background:#EF9F27"></div><div class="task-content"><div class="task-name">Source Lottie animations<span class="badge b-high">high</span></div><div class="task-desc">Find or commission 4 states on LottieFiles (free tier): working, celebrating, idle/yawning, break-stretching.</div></div></div>
+      <div class="task"><div class="task-dot" style="background:#EF9F27"></div><div class="task-content"><div class="task-name">Companion state machine<span class="badge b-high">high</span></div><div class="task-desc">Map timer state → animation: running=working, break=celebrating→stretching, idle 5min=yawning. Drive via Zustand companionState.</div></div></div>
+      <div class="task"><div class="task-dot" style="background:#1D9E75"></div><div class="task-content"><div class="task-name">Idle re-engagement trigger<span class="badge b-medium">medium</span></div><div class="task-desc">useIdle hook — after 5 min of no interaction, switch companion to yawning state. Reset on any user event.</div></div></div>
+    </div>
+  </div>
+
+  <!-- Phase 7 -->
+  <div class="phase">
+    <div class="progress-bar"><div class="progress-fill" style="width:0%;background:#7F77DD"></div></div>
+    <div class="phase-header" onclick="toggle(this)">
+      <div class="phase-num" style="background:#EEEDFE;color:#3C3489">7</div>
+      <span class="phase-title">Session saving & stats</span>
+      <span class="phase-meta">Week 5 · 4 tasks</span>
+      <span class="phase-arrow">▶</span>
+    </div>
+    <div class="phase-body">
+      <div class="task"><div class="task-dot" style="background:#E24B4A"></div><div class="task-content"><div class="task-name">POST /api/sessions endpoint<span class="badge b-critical">critical</span></div><div class="task-desc">Accept session payload, validate with Zod, write to Supabase sessions table. Called once at session end.</div></div></div>
+      <div class="task"><div class="task-dot" style="background:#EF9F27"></div><div class="task-content"><div class="task-name">Session end trigger + summary card<span class="badge b-high">high</span></div><div class="task-desc">When user ends session or closes app, POST to /api/sessions. Show a celebration summary: time focused, todos done, streak.</div></div></div>
+      <div class="task"><div class="task-dot" style="background:#1D9E75"></div><div class="task-content"><div class="task-name">GET /api/sessions/stats<span class="badge b-medium">medium</span></div><div class="task-desc">Aggregate query: total focus time, current streak, most used space, projects this week. Shown in profile/stats page.</div></div></div>
+      <div class="task"><div class="task-dot" style="background:#1D9E75"></div><div class="task-content"><div class="task-name">Stats dashboard page<span class="badge b-medium">medium</span></div><div class="task-desc">Weekly focus chart (Chart.js bar), streak calendar heatmap, top projects. Accessible from nav.</div></div></div>
+    </div>
+  </div>
+
+  <!-- Phase 8 -->
+  <div class="phase">
+    <div class="progress-bar"><div class="progress-fill" style="width:0%;background:#7F77DD"></div></div>
+    <div class="phase-header" onclick="toggle(this)">
+      <div class="phase-num" style="background:#EEEDFE;color:#3C3489">8</div>
+      <span class="phase-title">Polish, accessibility & launch</span>
+      <span class="phase-meta">Week 6–8 · 5 tasks</span>
+      <span class="phase-arrow">▶</span>
+    </div>
+    <div class="phase-body">
+      <div class="task"><div class="task-dot" style="background:#EF9F27"></div><div class="task-content"><div class="task-name">Framer Motion transitions<span class="badge b-high">high</span></div><div class="task-desc">Space switch crossfade, panel slide-ins, timer ring animation, mood picker entrance. Keep all under 300ms.</div></div></div>
+      <div class="task"><div class="task-dot" style="background:#EF9F27"></div><div class="task-content"><div class="task-name">Mobile responsiveness<span class="badge b-high">high</span></div><div class="task-desc">Stack panels vertically on mobile. Bottom nav instead of sidebar. Ensure timer is thumb-reachable.</div></div></div>
+      <div class="task"><div class="task-dot" style="background:#1D9E75"></div><div class="task-content"><div class="task-name">Keyboard & ARIA accessibility<span class="badge b-medium">medium</span></div><div class="task-desc">All interactive elements keyboard-reachable. Timer has aria-live announcements. Respect prefers-reduced-motion.</div></div></div>
+      <div class="task"><div class="task-dot" style="background:#7F77DD"></div><div class="task-content"><div class="task-name">Ko-fi support button<span class="badge b-low">low</span></div><div class="task-desc">Small "support the dev" link in footer. No payment infra needed — Ko-fi handles everything.</div></div></div>
+      <div class="task"><div class="task-dot" style="background:#7F77DD"></div><div class="task-content"><div class="task-name">OG image & SEO meta tags<span class="badge b-low">low</span></div><div class="task-desc">Add og:image, twitter:card, description. Use Next.js metadata API. Helps when users share the app.</div></div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function toggle(header) {
+  const arrow = header.querySelector('.phase-arrow');
+  const body = header.nextElementSibling;
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  arrow.classList.toggle('open', !isOpen);
+}
+// Open phase 0 by default
+document.querySelector('.phase-header').click();
+</script>
