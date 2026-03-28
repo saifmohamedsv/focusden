@@ -1,0 +1,43 @@
+import { defineTokens } from "@chakra-ui/react";
+
+export const colors = defineTokens.colors({
+  olive: {
+    50: { value: "#f5f3ee" },
+    100: { value: "#e8e0d0" },
+    200: { value: "#c9bfa8" },
+    300: { value: "#a89a7e" },
+    400: { value: "#8a7a5e" },
+    500: { value: "#6b5d42" },
+    600: { value: "#504530" },
+    700: { value: "#3a3428" },
+    800: { value: "#2a2620" },
+    900: { value: "#1e1c16" },
+    950: { value: "#14130e" },
+  },
+  amber: {
+    50: { value: "#fef7ec" },
+    100: { value: "#fcebc4" },
+    200: { value: "#f9d68a" },
+    300: { value: "#f0b94d" },
+    400: { value: "#e8a32e" },
+    500: { value: "#d4943a" },
+    600: { value: "#b87420" },
+    700: { value: "#96571c" },
+    800: { value: "#7a441e" },
+    900: { value: "#65381d" },
+    950: { value: "#3b1c0c" },
+  },
+  sage: {
+    50: { value: "#f0f5f1" },
+    100: { value: "#d5e5d8" },
+    200: { value: "#aecdb5" },
+    300: { value: "#7dae87" },
+    400: { value: "#4a8b5a" },
+    500: { value: "#3d7a4e" },
+    600: { value: "#2f6240" },
+    700: { value: "#264e34" },
+    800: { value: "#1f3f2b" },
+    900: { value: "#193425" },
+    950: { value: "#0d1e14" },
+  },
+});
