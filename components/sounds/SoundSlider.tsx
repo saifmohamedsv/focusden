@@ -26,6 +26,8 @@ export function SoundSlider({ track, onVolumeChange, onToggle }: SoundSliderProp
           step="0.01"
           value={track.volume}
           onChange={(e) => onVolumeChange(track.id, parseFloat(e.target.value))}
+          aria-label={`${track.name} volume`}
+          aria-valuetext={`${Math.round(track.volume * 100)}%`}
           style={{
             width: "100%",
             height: "4px",
@@ -41,6 +43,9 @@ export function SoundSlider({ track, onVolumeChange, onToggle }: SoundSliderProp
       <Box
         as="button"
         onClick={() => onToggle(track.id)}
+        role="switch"
+        aria-checked={track.enabled && track.volume > 0}
+        aria-label={`Toggle ${track.name}`}
         w="10px"
         h="10px"
         borderRadius="full"

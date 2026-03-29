@@ -10,6 +10,18 @@ export const metadata: Metadata = {
   title: "FocusDen — Focus, Flow, Feel Good",
   description:
     "A cozy focus platform with Pomodoro timer, ambient sounds, and a companion to keep you company while you work.",
+  openGraph: {
+    title: "FocusDen — Focus, Flow, Feel Good",
+    description:
+      "A cozy focus platform with Pomodoro timer, ambient sounds, and a companion to keep you company.",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "FocusDen — Focus, Flow, Feel Good",
+    description:
+      "A cozy focus platform with Pomodoro timer, ambient sounds, and a companion to keep you company.",
+  },
 };
 
 export default function RootLayout({
