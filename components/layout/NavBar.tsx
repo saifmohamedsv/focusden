@@ -1,6 +1,7 @@
 "use client";
 
 import { Box, IconButton, Spacer, VStack, Text } from "@chakra-ui/react";
+import Link from "next/link";
 import { signOut } from "next-auth/react";
 import { useUser } from "@/lib/auth/user-context";
 
@@ -27,13 +28,12 @@ function SpacesIcon() {
   );
 }
 
-function NotesIcon() {
+function BarChartIcon() {
   return (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-      <polyline points="14 2 14 8 20 8" />
-      <line x1="9" y1="13" x2="15" y2="13" />
-      <line x1="9" y1="17" x2="13" y2="17" />
+      <rect x="3" y="12" width="4" height="9" rx="1" />
+      <rect x="10" y="7" width="4" height="14" rx="1" />
+      <rect x="17" y="3" width="4" height="18" rx="1" />
     </svg>
   );
 }
@@ -48,7 +48,21 @@ function SettingsIcon() {
   );
 }
 
-export function NavBar() {
+/** Panels icon — used in mobile bottom bar to open right-panel drawer */
+function PanelsIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="3" width="18" height="18" rx="2" />
+      <line x1="15" y1="3" x2="15" y2="21" />
+    </svg>
+  );
+}
+
+interface NavBarProps {
+  onDrawerToggle?: () => void;
+}
+
+export function NavBar({ onDrawerToggle }: NavBarProps) {
   const user = useUser();
 
   const initials = user?.name
@@ -60,110 +74,200 @@ export function NavBar() {
         .toUpperCase()
     : "?";
 
-  return (
+  const avatarNode = (
     <Box
-      w="64px"
-      h="100vh"
-      bg="bg.panel"
-      borderRight="1px solid"
-      borderColor="border"
+      w="36px"
+      h="36px"
+      borderRadius="full"
+      bg="bg.surface"
+      border="2px solid"
+      borderColor="yellow.400"
       display="flex"
-      flexDirection="column"
       alignItems="center"
-      py="4"
-      gap="2"
+      justifyContent="center"
+      cursor="pointer"
+      overflow="hidden"
+      onClick={() => signOut()}
+      title="Sign out"
+      flexShrink={0}
     >
-      {/* Logo */}
-      <Box mb="4">
-        <Text
-          fontSize="2xl"
-          fontWeight="bold"
-          color="accent"
-          fontFamily="heading"
-          lineHeight="1"
-          userSelect="none"
-        >
-          F
+      {user?.image ? (
+        <img
+          src={user.image}
+          alt={user.name || "User avatar"}
+          width={36}
+          height={36}
+          style={{ borderRadius: "50%", display: "block" }}
+          referrerPolicy="no-referrer"
+        />
+      ) : (
+        <Text fontSize="xs" fontWeight="bold" color="fg" userSelect="none">
+          {initials}
         </Text>
+      )}
+    </Box>
+  );
+
+  return (
+    <>
+      {/* ─── Desktop / Tablet vertical sidebar (shown ≥768px) ─── */}
+      <Box
+        as="nav"
+        aria-label="Main navigation"
+        className="navbar-sidebar"
+        w="64px"
+        h="100vh"
+        bg="bg.panel"
+        borderRight="1px solid"
+        borderColor="border"
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        py="4"
+        gap="2"
+      >
+        {/* Logo */}
+        <Box mb="4">
+          <Text
+            fontSize="2xl"
+            fontWeight="bold"
+            color="accent"
+            fontFamily="heading"
+            lineHeight="1"
+            userSelect="none"
+          >
+            F
+          </Text>
+        </Box>
+
+        {/* Nav icon buttons */}
+        <VStack gap="1">
+          <IconButton
+            aria-label="Timer"
+            variant={"ghost" as BtnVariant}
+            size={"md" as BtnSize}
+            rounded="xl"
+            color="fg.secondary"
+          >
+            <TimerIcon />
+          </IconButton>
+          <IconButton
+            aria-label="Spaces"
+            variant={"ghost" as BtnVariant}
+            size={"md" as BtnSize}
+            rounded="xl"
+            color="fg.secondary"
+          >
+            <SpacesIcon />
+          </IconButton>
+          <Link href="/stats" style={{ display: "contents" }}>
+            <IconButton
+              aria-label="Stats"
+              variant={"ghost" as BtnVariant}
+              size={"md" as BtnSize}
+              rounded="xl"
+              color="fg.secondary"
+            >
+              <BarChartIcon />
+            </IconButton>
+          </Link>
+        </VStack>
+
+        <Spacer />
+
+        {/* Bottom section */}
+        <VStack gap="3" alignItems="center">
+          <IconButton
+            aria-label="Settings"
+            variant={"ghost" as BtnVariant}
+            size={"md" as BtnSize}
+            rounded="xl"
+            color="fg.secondary"
+          >
+            <SettingsIcon />
+          </IconButton>
+
+          {avatarNode}
+        </VStack>
       </Box>
 
-      {/* Nav icon buttons */}
-      <VStack gap="1">
+      {/* ─── Mobile horizontal bottom bar (shown <768px) ─── */}
+      <Box
+        as="nav"
+        aria-label="Mobile navigation"
+        className="navbar-bottom"
+        position="fixed"
+        bottom="0"
+        left="0"
+        right="0"
+        h="56px"
+        bg="bg.panel"
+        borderTop="1px solid"
+        borderColor="border"
+        display="none"
+        alignItems="center"
+        justifyContent="space-around"
+        px="2"
+        zIndex={50}
+      >
+        {/* Timer (home) */}
         <IconButton
           aria-label="Timer"
           variant={"ghost" as BtnVariant}
           size={"md" as BtnSize}
           rounded="xl"
           color="fg.secondary"
+          minW="44px"
+          minH="44px"
         >
           <TimerIcon />
         </IconButton>
+
+        {/* Spaces */}
         <IconButton
           aria-label="Spaces"
           variant={"ghost" as BtnVariant}
           size={"md" as BtnSize}
           rounded="xl"
           color="fg.secondary"
+          minW="44px"
+          minH="44px"
         >
           <SpacesIcon />
         </IconButton>
+
+        {/* Stats */}
+        <Link href="/stats">
+          <IconButton
+            aria-label="Stats"
+            variant={"ghost" as BtnVariant}
+            size={"md" as BtnSize}
+            rounded="xl"
+            color="fg.secondary"
+            minW="44px"
+            minH="44px"
+          >
+            <BarChartIcon />
+          </IconButton>
+        </Link>
+
+        {/* Panels — opens right panel drawer */}
         <IconButton
-          aria-label="Notes"
+          aria-label="Open panels"
           variant={"ghost" as BtnVariant}
           size={"md" as BtnSize}
           rounded="xl"
           color="fg.secondary"
+          minW="44px"
+          minH="44px"
+          onClick={onDrawerToggle}
         >
-          <NotesIcon />
-        </IconButton>
-      </VStack>
-
-      <Spacer />
-
-      {/* Bottom section */}
-      <VStack gap="3" alignItems="center">
-        <IconButton
-          aria-label="Settings"
-          variant={"ghost" as BtnVariant}
-          size={"md" as BtnSize}
-          rounded="xl"
-          color="fg.secondary"
-        >
-          <SettingsIcon />
+          <PanelsIcon />
         </IconButton>
 
-        {/* Avatar circle */}
-        <Box
-          w="36px"
-          h="36px"
-          borderRadius="full"
-          bg="bg.surface"
-          border="2px solid"
-          borderColor="yellow.400"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          cursor="pointer"
-          overflow="hidden"
-          onClick={() => signOut()}
-          title="Sign out"
-        >
-          {user?.image ? (
-            <img
-              src={user.image}
-              alt={user.name || "User avatar"}
-              width={36}
-              height={36}
-              style={{ borderRadius: "50%", display: "block" }}
-              referrerPolicy="no-referrer"
-            />
-          ) : (
-            <Text fontSize="xs" fontWeight="bold" color="fg" userSelect="none">
-              {initials}
-            </Text>
-          )}
-        </Box>
-      </VStack>
-    </Box>
+        {/* Avatar */}
+        {avatarNode}
+      </Box>
+    </>
   );
 }
