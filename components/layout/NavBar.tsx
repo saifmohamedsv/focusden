@@ -1,6 +1,8 @@
 "use client";
 
 import { Box, IconButton, Spacer, VStack, Text } from "@chakra-ui/react";
+import { signOut } from "next-auth/react";
+import { useUser } from "@/lib/auth/user-context";
 
 type BtnVariant = "ghost" | "solid";
 type BtnSize = "sm" | "md" | "lg";
@@ -47,6 +49,17 @@ function SettingsIcon() {
 }
 
 export function NavBar() {
+  const user = useUser();
+
+  const initials = user?.name
+    ? user.name
+        .split(" ")
+        .map((part) => part[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase()
+    : "?";
+
   return (
     <Box
       w="64px"
@@ -131,10 +144,24 @@ export function NavBar() {
           alignItems="center"
           justifyContent="center"
           cursor="pointer"
+          overflow="hidden"
+          onClick={() => signOut()}
+          title="Sign out"
         >
-          <Text fontSize="xs" fontWeight="bold" color="fg" userSelect="none">
-            YO
-          </Text>
+          {user?.image ? (
+            <img
+              src={user.image}
+              alt={user.name || "User avatar"}
+              width={36}
+              height={36}
+              style={{ borderRadius: "50%", display: "block" }}
+              referrerPolicy="no-referrer"
+            />
+          ) : (
+            <Text fontSize="xs" fontWeight="bold" color="fg" userSelect="none">
+              {initials}
+            </Text>
+          )}
         </Box>
       </VStack>
     </Box>

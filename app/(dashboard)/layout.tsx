@@ -1,30 +1,21 @@
-"use client";
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth/config";
+import { HydrationGuard } from "./hydration-guard";
 
-import { Box, Text } from "@chakra-ui/react";
-import { useHydration } from "@/hooks/useHydration";
-
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const hasHydrated = useHydration();
+  const session = await auth();
 
-  if (!hasHydrated) {
-    return (
-      <Box
-        minH="100vh"
-        bg="bg"
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-      >
-        <Text color="fg.muted" fontSize="sm">
-          Loading...
-        </Text>
-      </Box>
-    );
+  if (!session) {
+    redirect("/login");
   }
 
-  return <>{children}</>;
+  return (
+    <HydrationGuard user={session.user ?? {}}>
+      {children}
+    </HydrationGuard>
+  );
 }
