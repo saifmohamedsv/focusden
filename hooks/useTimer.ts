@@ -28,9 +28,13 @@ export function useTimer() {
   const workDuration = useAppStore((s) => s.workDuration);
   const breakDuration = useAppStore((s) => s.breakDuration);
   const currentRound = useAppStore((s) => s.currentRound);
+  const lastFocusDuration = useAppStore((s) => s.lastFocusDuration);
   const startTimer = useAppStore((s) => s.startTimer);
   const pauseTimer = useAppStore((s) => s.pauseTimer);
   const resetTimer = useAppStore((s) => s.resetTimer);
+
+  const isTransition =
+    timerStatus === "transition_to_break" || timerStatus === "transition_to_focus";
 
   useEffect(() => {
     intervalOwnerCount++;
@@ -43,6 +47,7 @@ export function useTimer() {
   }, []);
 
   useEffect(() => {
+    // Only tick during active running/break states — not during transitions
     if (timerStatus === "running" || timerStatus === "break") {
       startGlobalInterval();
     } else {
@@ -51,13 +56,21 @@ export function useTimer() {
   }, [timerStatus]);
 
   const toggleTimer = useCallback(() => {
-    if (timerStatus === "running" || timerStatus === "break") { pauseTimer(); }
-    else { startTimer(); }
-  }, [timerStatus, startTimer, pauseTimer]);
+    // No-op during transition states
+    if (isTransition) return;
+    if (timerStatus === "running" || timerStatus === "break") {
+      pauseTimer();
+    } else {
+      startTimer();
+    }
+  }, [timerStatus, isTransition, startTimer, pauseTimer]);
 
   const skipToNext = useCallback(() => {
-    if (timerStatus === "running" || timerStatus === "paused") { useAppStore.getState().switchToBreak(); }
-    else if (timerStatus === "break") { useAppStore.getState().switchToWork(); }
+    if (timerStatus === "running" || timerStatus === "paused") {
+      useAppStore.getState().transitionToBreak();
+    } else if (timerStatus === "break") {
+      useAppStore.getState().transitionToFocus();
+    }
   }, [timerStatus]);
 
   const minutes = Math.floor(timeRemaining / 60);
@@ -66,5 +79,20 @@ export function useTimer() {
     ? 1 - timeRemaining / (breakDuration * 60)
     : 1 - timeRemaining / (workDuration * 60);
 
-  return { timerStatus, timeRemaining, minutes, seconds, progress, currentRound, workDuration, breakDuration, isRunning: timerStatus === "running" || timerStatus === "break", toggleTimer, resetTimer, skipToNext };
+  return {
+    timerStatus,
+    timeRemaining,
+    minutes,
+    seconds,
+    progress,
+    currentRound,
+    workDuration,
+    breakDuration,
+    lastFocusDuration,
+    isRunning: timerStatus === "running" || timerStatus === "break",
+    isTransition,
+    toggleTimer,
+    resetTimer,
+    skipToNext,
+  };
 }

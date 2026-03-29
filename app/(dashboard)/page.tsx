@@ -8,6 +8,7 @@ import { MoodPicker } from "@/components/mood/MoodPicker";
 import { PomodoroRing } from "@/components/timer/PomodoroRing";
 import { TimerDisplay } from "@/components/timer/TimerDisplay";
 import { TimerControls } from "@/components/timer/TimerControls";
+import { TransitionCard } from "@/components/timer/TransitionCard";
 import { NotesPanel } from "@/components/notes/NotesPanel";
 import { TodoList } from "@/components/todos/TodoList";
 import { ProjectNameInput } from "@/components/session/ProjectNameInput";
@@ -18,11 +19,13 @@ import { useAppStore } from "@/store";
 import { getSpaceById } from "@/lib/supabase/spaces";
 
 function FocusWorkspace() {
-  const { minutes, seconds, progress, timerStatus, currentRound } = useTimer();
+  const { minutes, seconds, progress, timerStatus, currentRound, lastFocusDuration, isTransition } = useTimer();
   const activeSpaceId = useAppStore((s) => s.activeSpaceId);
+  const todos = useAppStore((s) => s.todos);
   const activeSpace = getSpaceById(activeSpaceId);
   const isBreak = timerStatus === "break";
   const timerLabel = isBreak ? "Break" : "Focus";
+  const todosCompletedCount = todos.filter((t) => t.completed).length;
 
   return (
     <Box
@@ -62,46 +65,61 @@ function FocusWorkspace() {
         gap="5"
         minH="0"
       >
-        {/* Pomodoro ring with timer display centered inside */}
-        <Box
-          position="relative"
-          display="inline-flex"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <PomodoroRing progress={progress} isBreak={isBreak} />
-          <Box
-            position="absolute"
-            top="50%"
-            left="50%"
-            style={{ transform: "translate(-50%, -50%)" }}
-            textAlign="center"
-          >
-            <TimerDisplay minutes={minutes} seconds={seconds} label={timerLabel} />
-          </Box>
-        </Box>
-
-        {/* Round dots indicator */}
-        <HStack gap="2" justify="center">
-          {Array.from({ length: 4 }).map((_, i) => (
+        {isTransition ? (
+          <TransitionCard
+            mode={timerStatus === "transition_to_break" ? "focus_complete" : "break_complete"}
+            lastFocusDuration={lastFocusDuration}
+            todosCompletedCount={todosCompletedCount}
+          />
+        ) : (
+          <>
+            {/* Pomodoro ring with timer display centered inside */}
             <Box
-              key={i}
-              w="8px"
-              h="8px"
-              borderRadius="full"
-              bg={i < currentRound ? "accent" : "rgba(255,255,255,0.1)"}
-              transition="background 0.3s ease"
-            />
-          ))}
-        </HStack>
+              position="relative"
+              display="inline-flex"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <PomodoroRing progress={progress} isBreak={isBreak} />
+              <Box
+                position="absolute"
+                top="50%"
+                left="50%"
+                style={{ transform: "translate(-50%, -50%)" }}
+                textAlign="center"
+              >
+                <TimerDisplay
+                  minutes={minutes}
+                  seconds={seconds}
+                  label={timerLabel}
+                  isEditable={timerStatus === "idle"}
+                />
+              </Box>
+            </Box>
 
-        {/* Timer controls */}
-        <TimerControls />
+            {/* Round dots indicator */}
+            <HStack gap="2" justify="center">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <Box
+                  key={i}
+                  w="8px"
+                  h="8px"
+                  borderRadius="full"
+                  bg={i < currentRound ? "accent" : "rgba(255,255,255,0.1)"}
+                  transition="background 0.3s ease"
+                />
+              ))}
+            </HStack>
 
-        {/* Project name — subtle, below controls */}
-        <Box w="100%" maxW="240px" textAlign="center" opacity={0.7} _hover={{ opacity: 1 }} transition="opacity 0.2s">
-          <ProjectNameInput />
-        </Box>
+            {/* Timer controls */}
+            <TimerControls />
+
+            {/* Project name — subtle, below controls */}
+            <Box w="100%" maxW="240px" textAlign="center" opacity={0.7} _hover={{ opacity: 1 }} transition="opacity 0.2s">
+              <ProjectNameInput />
+            </Box>
+          </>
+        )}
       </VStack>
 
       {/* Notes + Todos at bottom */}

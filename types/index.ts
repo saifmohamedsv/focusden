@@ -41,7 +41,7 @@ export interface Todo {
   order: number;
 }
 
-export type TimerStatus = 'idle' | 'running' | 'paused' | 'break';
+export type TimerStatus = 'idle' | 'running' | 'paused' | 'break' | 'transition_to_break' | 'transition_to_focus';
 
 export type Mood = 'focused' | 'calm' | 'anxious' | 'restless';
 
