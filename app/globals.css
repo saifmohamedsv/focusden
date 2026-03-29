@@ -27,3 +27,74 @@ body {
   overflow: hidden;
   height: 100vh;
 }
+
+/* ─── Responsive layout ─── */
+
+/* Tablet (768–1023px): hide right panel column */
+@media (max-width: 1023px) {
+  .workspace-grid {
+    grid-template-columns: 64px 1fr !important;
+  }
+  .workspace-right {
+    display: none !important;
+  }
+}
+
+/* Mobile (<768px): single column, bottom nav replaces left sidebar */
+@media (max-width: 767px) {
+  .workspace-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .workspace-nav {
+    display: none !important;
+  }
+  /* Show the mobile bottom bar */
+  .navbar-bottom {
+    display: flex !important;
+  }
+  /* Add bottom padding so content isn't hidden behind bottom nav */
+  .workspace-main {
+    padding-bottom: 56px;
+  }
+}
+
+/* Desktop (≥1024px): always show sidebar, never show bottom bar */
+@media (min-width: 768px) {
+  .navbar-bottom {
+    display: none !important;
+  }
+  .navbar-sidebar {
+    display: flex !important;
+  }
+}
+
+/* ─── Visible focus rings for keyboard navigation ─── */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* ─── Timer ring: show correct size per breakpoint ─── */
+/* Mobile: hide desktop ring, show mobile ring */
+@media (max-width: 767px) {
+  .timer-ring-desktop {
+    display: none !important;
+  }
+  .timer-ring-mobile {
+    display: block !important;
+  }
+  /* Shift notes dock up above bottom nav */
+  .notes-dock {
+    bottom: calc(56px + 20px) !important;
+  }
+}
+
+/* Desktop/tablet: show desktop ring, hide mobile ring */
+@media (min-width: 768px) {
+  .timer-ring-desktop {
+    display: block !important;
+  }
+  .timer-ring-mobile {
+    display: none !important;
+  }
+}
