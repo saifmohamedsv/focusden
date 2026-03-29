@@ -1,8 +1,11 @@
 import { auth } from "@/lib/auth/config";
+import { NextResponse } from "next/server";
 
-// next-auth v5's `auth` function is a valid Next.js proxy/middleware handler
+// Dev bypass: skip auth when no OAuth credentials configured
+const devBypass = process.env.NODE_ENV === "development" && !process.env.GOOGLE_CLIENT_ID;
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default auth as any;
+export default devBypass ? () => NextResponse.next() : (auth as any);
 
 export const config = {
   matcher: [

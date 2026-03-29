@@ -9,12 +9,17 @@ export default async function DashboardLayout({
 }) {
   const session = await auth();
 
-  if (!session) {
+  // Dev bypass: skip auth redirect when no OAuth credentials configured
+  const devBypass = process.env.NODE_ENV === "development" && !process.env.GOOGLE_CLIENT_ID;
+
+  if (!session && !devBypass) {
     redirect("/login");
   }
 
+  const user = session?.user ?? { name: "Dev User", email: "dev@local", image: "" };
+
   return (
-    <HydrationGuard user={session.user ?? {}}>
+    <HydrationGuard user={user}>
       {children}
     </HydrationGuard>
   );
