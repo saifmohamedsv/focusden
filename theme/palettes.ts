@@ -15,14 +15,12 @@ export const defaultPalette: SpacePalette = {
 // Applies a space palette as CSS custom properties on :root
 export function applyPalette(palette: SpacePalette): void {
   const root = document.documentElement;
+  // Only set space-scoped variables — wallpaper bg + accent
+  // Text, border, surface stay constant (base theme)
   root.style.setProperty("--color-bg-primary", palette.bg_primary);
   root.style.setProperty("--color-bg-secondary", palette.bg_secondary);
   root.style.setProperty("--color-accent", palette.accent);
   root.style.setProperty("--color-accent-hover", palette.accent_hover);
-  root.style.setProperty("--color-text-primary", palette.text_primary);
-  root.style.setProperty("--color-text-secondary", palette.text_secondary);
-  root.style.setProperty("--color-border", palette.border);
-  root.style.setProperty("--color-surface", palette.surface);
 }
 
 // Each space defines its own palette override

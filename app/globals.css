@@ -1,21 +1,23 @@
 @import "tailwindcss";
 
 :root {
-  /* Space palette CSS custom properties — overridden dynamically per space */
+  /* Space-scoped — change per space */
   --color-bg-primary: #181713;
   --color-bg-secondary: #221f18;
   --color-accent: #C8894A;
   --color-accent-hover: #d4a560;
+
+  /* Base theme — constant across all spaces */
   --color-text-primary: #EDE5D0;
   --color-text-secondary: #A89880;
   --color-border: rgba(255, 255, 255, 0.07);
   --color-surface: #2a2620;
 
-  /* Smooth transitions when switching spaces */
+  /* Only transition space-scoped variables */
   transition: --color-bg-primary 0.6s ease,
     --color-bg-secondary 0.6s ease,
     --color-accent 0.6s ease,
-    --color-text-primary 0.6s ease;
+    --color-accent-hover 0.6s ease;
 }
 
 body {
