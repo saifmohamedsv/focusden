@@ -11,6 +11,8 @@ import { TimerControls } from "@/components/timer/TimerControls";
 import { NotesPanel } from "@/components/notes/NotesPanel";
 import { TodoList } from "@/components/todos/TodoList";
 import { ProjectNameInput } from "@/components/session/ProjectNameInput";
+import { SoundMixer } from "@/components/sounds/SoundMixer";
+import { CompanionBear } from "@/components/companion/CompanionBear";
 import { useTimer } from "@/hooks/useTimer";
 import { useAppStore } from "@/store";
 import { getSpaceById } from "@/lib/supabase/spaces";
@@ -87,38 +89,26 @@ function FocusWorkspace() {
 function RightPanelContent() {
   return (
     <>
-      {/* Companion placeholder */}
+      {/* Companion bear */}
       <Box
         bg="bg.surface"
         border="1px solid"
         borderColor="border"
         borderRadius="xl"
         p="4"
-        textAlign="center"
       >
-        <Text fontSize="xs" fontWeight="semibold" color="fg.muted" textTransform="uppercase" letterSpacing="0.15em" mb="2">
-          Companion
-        </Text>
-        <Text fontSize="sm" color="fg.dim" fontStyle="italic">
-          Coming in Stage 3
-        </Text>
+        <CompanionBear />
       </Box>
 
-      {/* Sound mixer placeholder */}
+      {/* Sound mixer */}
       <Box
         bg="bg.surface"
         border="1px solid"
         borderColor="border"
         borderRadius="xl"
         p="4"
-        textAlign="center"
       >
-        <Text fontSize="xs" fontWeight="semibold" color="fg.muted" textTransform="uppercase" letterSpacing="0.15em" mb="2">
-          Sound Mixer
-        </Text>
-        <Text fontSize="sm" color="fg.dim" fontStyle="italic">
-          Coming in Stage 3
-        </Text>
+        <SoundMixer />
       </Box>
 
       {/* Space grid */}
