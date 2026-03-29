@@ -22,6 +22,16 @@ function TrashIcon() {
   );
 }
 
+function GripIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" opacity={0.4}>
+      <circle cx="9" cy="6" r="2" /><circle cx="15" cy="6" r="2" />
+      <circle cx="9" cy="12" r="2" /><circle cx="15" cy="12" r="2" />
+      <circle cx="9" cy="18" r="2" /><circle cx="15" cy="18" r="2" />
+    </svg>
+  );
+}
+
 interface TodoItemProps { todo: Todo; }
 
 export function TodoItem({ todo }: TodoItemProps) {
@@ -31,14 +41,65 @@ export function TodoItem({ todo }: TodoItemProps) {
   const style = { transform: CSS.Transform.toString(transform), transition };
 
   return (
-    <HStack ref={setNodeRef} style={style} gap="3" py="1.5" cursor="grab" {...attributes} {...listeners} role="group">
-      <Box as="button" onClick={() => toggleTodo(todo.id)} w="5" h="5" borderRadius="md" border="1.5px solid" borderColor={todo.completed ? "success" : "border.mid"} bg={todo.completed ? "success.soft" : "transparent"} display="flex" alignItems="center" justifyContent="center" flexShrink={0} color="success" cursor="pointer">
+    <HStack ref={setNodeRef} style={style} gap="2" py="1.5" {...attributes} role="group">
+      {/* Drag handle — only this element gets dnd listeners */}
+      <Box
+        {...listeners}
+        cursor="grab"
+        flexShrink={0}
+        display="flex"
+        alignItems="center"
+        color="fg.dim"
+        _hover={{ color: "fg.muted" }}
+        px="1"
+      >
+        <GripIcon />
+      </Box>
+
+      {/* Checkbox */}
+      <Box
+        as="button"
+        onClick={() => toggleTodo(todo.id)}
+        w="5"
+        h="5"
+        borderRadius="md"
+        border="1.5px solid"
+        borderColor={todo.completed ? "success" : "border.mid"}
+        bg={todo.completed ? "success.soft" : "transparent"}
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        flexShrink={0}
+        color="success"
+        cursor="pointer"
+        transition="all 0.15s"
+        _hover={{ borderColor: todo.completed ? "success" : "border.strong" }}
+      >
         {todo.completed && <CheckIcon />}
       </Box>
-      <Text flex="1" fontSize="sm" color={todo.completed ? "fg.muted" : "fg.secondary"} textDecoration={todo.completed ? "line-through" : "none"}>
+
+      {/* Text */}
+      <Text
+        flex="1"
+        fontSize="sm"
+        color={todo.completed ? "fg.muted" : "fg.secondary"}
+        textDecoration={todo.completed ? "line-through" : "none"}
+        transition="all 0.15s"
+      >
         {todo.text}
       </Text>
-      <IconButton aria-label="Delete todo" variant="ghost" size="sm" onClick={() => deleteTodo(todo.id)} opacity={0} _groupHover={{ opacity: 1 }} color="fg.muted" rounded="full">
+
+      {/* Delete */}
+      <IconButton
+        aria-label="Delete todo"
+        variant="ghost"
+        size="sm"
+        onClick={() => deleteTodo(todo.id)}
+        opacity={0}
+        _groupHover={{ opacity: 1 }}
+        color="fg.muted"
+        rounded="full"
+      >
         <TrashIcon />
       </IconButton>
     </HStack>

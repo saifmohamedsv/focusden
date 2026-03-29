@@ -9,16 +9,45 @@ interface PomodoroRingProps {
   isBreak?: boolean;
 }
 
-export function PomodoroRing({ progress, size = 280, strokeWidth = 6, isBreak = false }: PomodoroRingProps) {
+export function PomodoroRing({ progress, size = 300, strokeWidth = 5, isBreak = false }: PomodoroRingProps) {
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference * (1 - progress);
+  const accentColor = isBreak ? "var(--chakra-colors-sage-300, #6B8F71)" : "var(--color-accent)";
 
   return (
-    <Box position="relative" width={`${size}px`} height={`${size}px`}>
+    <Box
+      position="relative"
+      width={`${size}px`}
+      height={`${size}px`}
+      filter={progress > 0 ? `drop-shadow(0 0 20px ${isBreak ? "rgba(107, 143, 113, 0.15)" : "rgba(200, 137, 74, 0.15)"})` : "none"}
+      transition="filter 0.6s ease"
+    >
       <svg width={size} height={size} style={{ transform: "rotate(-90deg)" }}>
-        <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="var(--color-surface)" strokeWidth={strokeWidth} opacity={0.5} />
-        <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke={isBreak ? "var(--chakra-colors-sage-300)" : "var(--color-accent)"} strokeWidth={strokeWidth} strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round" style={{ transition: "stroke-dashoffset 0.5s ease" }} />
+        {/* Background track */}
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="none"
+          stroke="rgba(255, 255, 255, 0.05)"
+          strokeWidth={strokeWidth}
+        />
+        {/* Progress ring */}
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="none"
+          stroke={accentColor}
+          strokeWidth={strokeWidth}
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          strokeLinecap="round"
+          style={{
+            transition: "stroke-dashoffset 0.8s cubic-bezier(0.16, 1, 0.3, 1)",
+          }}
+        />
       </svg>
     </Box>
   );
