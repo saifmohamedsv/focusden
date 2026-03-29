@@ -9,8 +9,8 @@ import { PomodoroRing } from "@/components/timer/PomodoroRing";
 import { TimerDisplay } from "@/components/timer/TimerDisplay";
 import { TimerControls } from "@/components/timer/TimerControls";
 import { TransitionCard } from "@/components/timer/TransitionCard";
-import { NotesPanel } from "@/components/notes/NotesPanel";
-import { TodoList } from "@/components/todos/TodoList";
+import { NotesDock } from "@/components/notes/NotesDock";
+import { TodosDock } from "@/components/todos/TodosDock";
 import { ProjectNameInput } from "@/components/session/ProjectNameInput";
 import { SoundMixer } from "@/components/sounds/SoundMixer";
 import { CompanionBear } from "@/components/companion/CompanionBear";
@@ -122,18 +122,23 @@ function FocusWorkspace() {
         )}
       </VStack>
 
-      {/* Notes + Todos at bottom */}
+      {/* Notes + Todos dock — small icon bar at bottom */}
       <HStack
-        gap="4"
-        w="100%"
-        maxW="700px"
-        align="stretch"
-        minH="0"
-        maxH="200px"
-        pb="2"
+        gap="2"
+        position="absolute"
+        bottom="5"
+        left="50%"
+        style={{ transform: "translateX(-50%)" }}
+        bg="bg.panel"
+        border="1px solid"
+        borderColor="border"
+        borderRadius="full"
+        px="3"
+        py="2"
+        boxShadow="0 4px 16px rgba(0, 0, 0, 0.4)"
       >
-        <NotesPanel />
-        <TodoList />
+        <NotesDock />
+        <TodosDock />
       </HStack>
     </Box>
   );
