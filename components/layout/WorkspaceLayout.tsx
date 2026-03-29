@@ -70,13 +70,7 @@ function RightPanelDrawer({ onClose, children }: RightPanelDrawerProps) {
           cursor="pointer"
           onClick={onClose}
         >
-          <Box
-            w="32px"
-            h="4px"
-            borderRadius="full"
-            bg="border"
-            opacity={0.6}
-          />
+          <Box w="32px" h="4px" borderRadius="full" bg="border" opacity={0.6} />
         </Box>
 
         {/* Content */}
@@ -99,7 +93,6 @@ export function WorkspaceLayout({ children, rightPanel }: WorkspaceLayoutProps) 
 
   return (
     <>
-      {/* Inject keyframe for drawer animation */}
       <style>{`
         @keyframes slideUpDrawer {
           from { transform: translateY(100%); }
@@ -107,39 +100,31 @@ export function WorkspaceLayout({ children, rightPanel }: WorkspaceLayoutProps) 
         }
       `}</style>
 
-      {/* Desktop + Tablet layout (uses CSS grid that collapses right panel at ≤1023px) */}
-      <Box
-        className="workspace-grid"
-        h="100vh"
-        overflow="hidden"
-        display="grid"
-        /* Desktop: 64px nav | 1fr content | 320px right */
-        gridTemplateColumns="64px 1fr 320px"
-        gridTemplateRows="1fr"
-      >
-        {/* Left: NavBar — passes drawer toggle for mobile bottom bar */}
-        <Box className="workspace-nav">
-          <NavBar onDrawerToggle={() => setDrawerOpen((o) => !o)} />
-        </Box>
+      <Box h="100vh" overflow="hidden" display="flex" flexDirection="column">
+        {/* Top bar */}
+        <NavBar onDrawerToggle={() => setDrawerOpen((o) => !o)} />
 
-        {/* Center: main content */}
-        <Box as="main" className="workspace-main" overflow="hidden">
-          <Box
-            h="100%"
-            overflow="auto"
-            css={{ "&::-webkit-scrollbar": { display: "none" }, scrollbarWidth: "none" }}
-          >
-            {children}
+        {/* Content area */}
+        <Box flex="1" display="flex" overflow="hidden" minH="0">
+          {/* Main workspace */}
+          <Box as="main" flex="1" overflow="hidden" position="relative">
+            <Box
+              h="100%"
+              overflow="auto"
+              css={{ "&::-webkit-scrollbar": { display: "none" }, scrollbarWidth: "none" }}
+            >
+              {children}
+            </Box>
           </Box>
-        </Box>
 
-        {/* Right: RightPanel — hidden on tablet/mobile via CSS */}
-        <Box className="workspace-right">
-          <RightPanel>{rightPanel}</RightPanel>
+          {/* Right panel — hidden on tablet/mobile via CSS */}
+          <Box className="workspace-right" flexShrink={0}>
+            <RightPanel>{rightPanel}</RightPanel>
+          </Box>
         </Box>
       </Box>
 
-      {/* Drawer for tablet/mobile — shown when toggled */}
+      {/* Drawer for tablet/mobile */}
       {drawerOpen && rightPanel && (
         <RightPanelDrawer onClose={() => setDrawerOpen(false)}>
           {rightPanel}

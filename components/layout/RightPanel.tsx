@@ -11,7 +11,7 @@ export function RightPanel({ children }: RightPanelProps) {
     <Box
       as="aside"
       w="320px"
-      h="100vh"
+      h="100%"
       bg="bg.panel"
       borderLeft="1px solid"
       borderColor="border"
