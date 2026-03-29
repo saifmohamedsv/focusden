@@ -1,7 +1,8 @@
 "use client";
 
 import { Box, Text } from "@chakra-ui/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 interface FloatingPanelProps {
   title: string;
@@ -10,6 +11,12 @@ interface FloatingPanelProps {
 }
 
 export function FloatingPanel({ title, onClose, children }: FloatingPanelProps) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -18,7 +25,9 @@ export function FloatingPanel({ title, onClose, children }: FloatingPanelProps) 
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [onClose]);
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <Box
       position="fixed"
       inset="0"
@@ -91,6 +100,7 @@ export function FloatingPanel({ title, onClose, children }: FloatingPanelProps) 
           {children}
         </Box>
       </Box>
-    </Box>
+    </Box>,
+    document.body,
   );
 }
