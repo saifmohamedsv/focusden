@@ -39,9 +39,21 @@ export function MoodPicker() {
 
   return (
     <HStack gap="3" align="center">
-      <Text fontSize="sm" color="fg.muted" fontWeight="medium">Feeling</Text>
+      <Text fontSize="sm" color="fg.muted" fontWeight="medium">
+        Feeling
+      </Text>
       {moods.map((m) => (
-        <Button key={m.value} size="sm" variant={(currentMood === m.value ? "primary" : "surface") as "solid"} onClick={() => handleSelect(m.value)} rounded="full" fontSize="sm" px="4" py="1" h="auto">
+        <Button
+          key={m.value}
+          size="sm"
+          variant={(currentMood === m.value ? "primary" : "surface") as "solid"}
+          onClick={() => handleSelect(m.value)}
+          rounded="full"
+          fontSize="sm"
+          px="4"
+          py="1"
+          h="auto"
+        >
           {m.label}
         </Button>
       ))}
