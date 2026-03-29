@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { useAppStore } from "@/store";
+import { SessionSummary } from "@/components/session/SessionSummary";
 
 const AUTO_CONTINUE_SECONDS = 10;
 
@@ -16,6 +18,16 @@ export function TransitionCard({ mode, lastFocusDuration, todosCompletedCount }:
   const switchToWork = useAppStore((s) => s.switchToWork);
   const continueWorking = useAppStore((s) => s.continueWorking);
   const extendBreak = useAppStore((s) => s.extendBreak);
+  const currentRound = useAppStore((s) => s.currentRound);
+  const workDuration = useAppStore((s) => s.workDuration);
+  const activeSpaceId = useAppStore((s) => s.activeSpaceId);
+  const todos = useAppStore((s) => s.todos);
+  const resetTimer = useAppStore((s) => s.resetTimer);
+
+  const [showSummary, setShowSummary] = useState(false);
+
+  const totalFocusMinutes = currentRound * workDuration;
+  const completedTodos = todos.filter((t) => t.completed).length;
 
   const [progress, setProgress] = useState(0);
   const startTimeRef = useRef<number>(Date.now());
@@ -52,9 +64,27 @@ export function TransitionCard({ mode, lastFocusDuration, todosCompletedCount }:
   const isFocusComplete = mode === "focus_complete";
   const titleColor = isFocusComplete ? "var(--color-accent)" : "var(--color-success, #6abf69)";
   const title = isFocusComplete ? "Focus complete!" : "Break's over!";
+  const showEndSession = currentRound >= 3;
+  const prefersReduced = useReducedMotion();
+  const cardDuration = prefersReduced ? 0 : 0.3;
+
+  if (showSummary) {
+    return (
+      <SessionSummary
+        totalRounds={currentRound}
+        totalFocusMinutes={totalFocusMinutes}
+        todosCompleted={completedTodos}
+        spaceName={activeSpaceId ?? "Focus session"}
+        onDone={() => setShowSummary(false)}
+      />
+    );
+  }
 
   return (
-    <div
+    <motion.div
+      initial={prefersReduced ? false : { opacity: 0, scale: 0.96 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: cardDuration, ease: "easeOut" }}
       style={{
         position: "relative",
         overflow: "hidden",
@@ -220,6 +250,36 @@ export function TransitionCard({ mode, lastFocusDuration, todosCompletedCount }:
         </button>
       </div>
 
+      {/* End session — visible from round 3 onwards */}
+      {showEndSession && (
+        <button
+          onClick={() => setShowSummary(true)}
+          style={{
+            marginTop: "12px",
+            width: "100%",
+            padding: "7px 14px",
+            borderRadius: "9999px",
+            background: "transparent",
+            color: "var(--color-text-secondary)",
+            border: "none",
+            fontSize: "0.75rem",
+            fontWeight: 400,
+            cursor: "pointer",
+            transition: "color 0.15s",
+            fontFamily: "inherit",
+            letterSpacing: "0.01em",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = "var(--color-text-primary)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = "var(--color-text-secondary)";
+          }}
+        >
+          End session
+        </button>
+      )}
+
       {/* Auto-continue progress bar */}
       <div
         style={{
@@ -240,6 +300,6 @@ export function TransitionCard({ mode, lastFocusDuration, todosCompletedCount }:
           }}
         />
       </div>
-    </div>
+    </motion.div>
   );
 }

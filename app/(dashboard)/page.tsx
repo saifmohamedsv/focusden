@@ -12,6 +12,7 @@ import { TransitionCard } from "@/components/timer/TransitionCard";
 import { NotesDock } from "@/components/notes/NotesDock";
 import { TodosDock } from "@/components/todos/TodosDock";
 import { ProjectNameInput } from "@/components/session/ProjectNameInput";
+import { QuickStart } from "@/components/session/QuickStart";
 import { SoundMixer } from "@/components/sounds/SoundMixer";
 import { CompanionBear } from "@/components/companion/CompanionBear";
 import { useTimer } from "@/hooks/useTimer";
@@ -33,7 +34,7 @@ function FocusWorkspace() {
       display="flex"
       flexDirection="column"
       alignItems="center"
-      px="8"
+      px={{ base: "4", md: "8" }}
       py="5"
     >
       {/* Top bar: Space name + Mood picker — separated from timer */}
@@ -73,14 +74,23 @@ function FocusWorkspace() {
           />
         ) : (
           <>
-            {/* Pomodoro ring with timer display centered inside */}
+            {/* Pomodoro ring with timer display centered inside.
+                On mobile use a smaller ring (220px) via CSS class. */}
             <Box
+              className="timer-ring-wrapper"
               position="relative"
               display="inline-flex"
               alignItems="center"
               justifyContent="center"
             >
-              <PomodoroRing progress={progress} isBreak={isBreak} />
+              {/* Desktop ring (hidden on mobile) */}
+              <Box className="timer-ring-desktop">
+                <PomodoroRing progress={progress} isBreak={isBreak} size={300} />
+              </Box>
+              {/* Mobile ring (hidden on desktop) */}
+              <Box className="timer-ring-mobile">
+                <PomodoroRing progress={progress} isBreak={isBreak} size={220} />
+              </Box>
               <Box
                 position="absolute"
                 top="50%"
@@ -114,6 +124,9 @@ function FocusWorkspace() {
             {/* Timer controls */}
             <TimerControls />
 
+            {/* Quick start — only when idle */}
+            {timerStatus === "idle" && <QuickStart />}
+
             {/* Project name — subtle, below controls */}
             <Box w="100%" maxW="240px" textAlign="center" opacity={0.7} _hover={{ opacity: 1 }} transition="opacity 0.2s">
               <ProjectNameInput />
@@ -122,10 +135,12 @@ function FocusWorkspace() {
         )}
       </VStack>
 
-      {/* Notes + Todos dock — small icon bar at bottom */}
+      {/* Notes + Todos dock — small icon bar at bottom.
+          On mobile, shift up by 56px to clear the bottom nav bar. */}
       <HStack
         gap="2"
         position="absolute"
+        className="notes-dock"
         bottom="5"
         left="50%"
         style={{ transform: "translateX(-50%)" }}
