@@ -1,28 +1,54 @@
 "use client";
 
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useCallback } from "react";
 import { useAppStore } from "@/store";
 
+// Single global interval — prevents duplicate ticking when multiple
+// components call useTimer()
+let globalInterval: ReturnType<typeof setInterval> | null = null;
+let intervalOwnerCount = 0;
+
+function startGlobalInterval() {
+  if (globalInterval) return;
+  globalInterval = setInterval(() => {
+    useAppStore.getState().tick();
+  }, 1000);
+}
+
+function stopGlobalInterval() {
+  if (globalInterval) {
+    clearInterval(globalInterval);
+    globalInterval = null;
+  }
+}
+
 export function useTimer() {
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const timerStatus = useAppStore((s) => s.timerStatus);
   const timeRemaining = useAppStore((s) => s.timeRemaining);
   const workDuration = useAppStore((s) => s.workDuration);
   const breakDuration = useAppStore((s) => s.breakDuration);
   const currentRound = useAppStore((s) => s.currentRound);
-  const tick = useAppStore((s) => s.tick);
   const startTimer = useAppStore((s) => s.startTimer);
   const pauseTimer = useAppStore((s) => s.pauseTimer);
   const resetTimer = useAppStore((s) => s.resetTimer);
 
   useEffect(() => {
-    if (timerStatus === "running" || timerStatus === "break") {
-      intervalRef.current = setInterval(() => { tick(); }, 1000);
-    }
+    intervalOwnerCount++;
     return () => {
-      if (intervalRef.current) { clearInterval(intervalRef.current); intervalRef.current = null; }
+      intervalOwnerCount--;
+      if (intervalOwnerCount === 0) {
+        stopGlobalInterval();
+      }
     };
-  }, [timerStatus, tick]);
+  }, []);
+
+  useEffect(() => {
+    if (timerStatus === "running" || timerStatus === "break") {
+      startGlobalInterval();
+    } else {
+      stopGlobalInterval();
+    }
+  }, [timerStatus]);
 
   const toggleTimer = useCallback(() => {
     if (timerStatus === "running" || timerStatus === "break") { pauseTimer(); }

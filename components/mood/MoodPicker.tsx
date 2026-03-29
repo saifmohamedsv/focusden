@@ -16,18 +16,25 @@ export function MoodPicker() {
   const setMood = useAppStore((s) => s.setMood);
   const setWorkDuration = useAppStore((s) => s.setWorkDuration);
   const setBreakDuration = useAppStore((s) => s.setBreakDuration);
+  const resetTimer = useAppStore((s) => s.resetTimer);
+  const timerStatus = useAppStore((s) => s.timerStatus);
 
   const handleSelect = (mood: Mood) => {
     if (currentMood === mood) {
       setMood(null);
       setWorkDuration(25);
       setBreakDuration(5);
-      return;
+    } else {
+      setMood(mood);
+      const config = MOOD_CONFIGS[mood];
+      setWorkDuration(config.workMinutes);
+      setBreakDuration(config.breakMinutes);
     }
-    setMood(mood);
-    const config = MOOD_CONFIGS[mood];
-    setWorkDuration(config.workMinutes);
-    setBreakDuration(config.breakMinutes);
+    // Always reset timer when mood changes — avoids broken state mid-session
+    if (timerStatus !== "idle") {
+      // Defer reset so new durations are applied first
+      setTimeout(() => resetTimer(), 0);
+    }
   };
 
   return (
