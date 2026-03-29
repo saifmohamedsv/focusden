@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useAppStore } from "@/store";
 import { getSpaceById } from "@/lib/supabase/spaces";
 import { applyPalette, defaultPalette } from "@/theme/palettes";
@@ -8,6 +9,7 @@ import { applyPalette, defaultPalette } from "@/theme/palettes";
 export function SpaceBackground() {
   const activeSpaceId = useAppStore((s) => s.activeSpaceId);
   const activeSpace = getSpaceById(activeSpaceId);
+  const prefersReduced = useReducedMotion();
 
   useEffect(() => {
     if (activeSpace?.palette) {
@@ -28,20 +30,27 @@ export function SpaceBackground() {
         overflow: "hidden",
       }}
     >
-      {/* Wallpaper */}
-      {wallpaperUrl && (
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            backgroundImage: `url(${wallpaperUrl})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-          }}
-        />
-      )}
-      {/* Dark overlay */}
+      {/* Wallpaper — crossfades when activeSpaceId changes */}
+      <AnimatePresence mode="wait">
+        {wallpaperUrl && (
+          <motion.div
+            key={activeSpaceId ?? "no-space"}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: prefersReduced ? 0 : 0.6 }}
+            style={{
+              position: "absolute",
+              inset: 0,
+              backgroundImage: `url(${wallpaperUrl})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+            }}
+          />
+        )}
+      </AnimatePresence>
+      {/* Dark overlay — stays constant */}
       <div
         style={{
           position: "absolute",

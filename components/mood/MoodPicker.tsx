@@ -1,6 +1,7 @@
 "use client";
 
 import { HStack, Text, Button } from "@chakra-ui/react";
+import { motion, useReducedMotion } from "framer-motion";
 import { useAppStore } from "@/store";
 import { Mood, MOOD_CONFIGS } from "@/types";
 
@@ -18,6 +19,7 @@ export function MoodPicker() {
   const setBreakDuration = useAppStore((s) => s.setBreakDuration);
   const resetTimer = useAppStore((s) => s.resetTimer);
   const timerStatus = useAppStore((s) => s.timerStatus);
+  const prefersReduced = useReducedMotion();
 
   const handleSelect = (mood: Mood) => {
     if (currentMood === mood) {
@@ -42,20 +44,26 @@ export function MoodPicker() {
       <Text fontSize="sm" color="fg.muted" fontWeight="medium">
         Feeling
       </Text>
-      {moods.map((m) => (
-        <Button
+      {moods.map((m, index) => (
+        <motion.div
           key={m.value}
-          size="sm"
-          variant={(currentMood === m.value ? "primary" : "surface") as "solid"}
-          onClick={() => handleSelect(m.value)}
-          rounded="full"
-          fontSize="sm"
-          px="4"
-          py="1"
-          h="auto"
+          initial={prefersReduced ? false : { opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: prefersReduced ? 0 : 0.2, delay: prefersReduced ? 0 : index * 0.05 }}
         >
-          {m.label}
-        </Button>
+          <Button
+            size="sm"
+            variant={(currentMood === m.value ? "primary" : "surface") as "solid"}
+            onClick={() => handleSelect(m.value)}
+            rounded="full"
+            fontSize="sm"
+            px="4"
+            py="1"
+            h="auto"
+          >
+            {m.label}
+          </Button>
+        </motion.div>
       ))}
     </HStack>
   );

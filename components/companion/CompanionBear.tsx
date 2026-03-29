@@ -2,6 +2,7 @@
 
 import { VStack, Box, Text } from "@chakra-ui/react";
 import { useEffect, useRef, useCallback } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useAppStore } from "@/store";
 import { useIdle } from "@/hooks/useIdle";
 import { BearWorking } from "./BearWorking";
@@ -63,6 +64,8 @@ export function CompanionBear() {
   useIdle(5 * 60 * 1000, handleIdle, handleActive);
 
   const BearComponent = bearComponents[companionState];
+  const prefersReduced = useReducedMotion();
+  const bearDuration = prefersReduced ? 0 : 0.3;
 
   return (
     <VStack gap="2" w="full" align="center">
@@ -71,7 +74,17 @@ export function CompanionBear() {
       </Text>
       <SpeechBubble state={companionState} />
       <Box w="full" maxW="200px" mx="auto">
-        <BearComponent />
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={companionState}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: bearDuration }}
+          >
+            <BearComponent />
+          </motion.div>
+        </AnimatePresence>
       </Box>
     </VStack>
   );

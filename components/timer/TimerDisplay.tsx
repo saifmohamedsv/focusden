@@ -36,6 +36,7 @@ function InlineStepper({
   onChange,
   onDone,
   fontSize = "timer",
+  label,
 }: {
   value: number;
   min: number;
@@ -43,6 +44,7 @@ function InlineStepper({
   onChange: (v: number) => void;
   onDone: () => void;
   fontSize?: string;
+  label?: string;
 }) {
   const increment = () => onChange(Math.min(value + 1, max));
   const decrement = () => onChange(Math.max(value - 1, min));
@@ -91,7 +93,7 @@ function InlineStepper({
         style={btnStyle}
         onMouseEnter={(e) => { e.currentTarget.style.opacity = "1"; }}
         onMouseLeave={(e) => { e.currentTarget.style.opacity = "0.7"; }}
-        aria-label="Increase"
+        aria-label={`Increase ${label ?? "value"}`}
       >
         <ChevronUp />
       </button>
@@ -102,6 +104,12 @@ function InlineStepper({
         fontFamily="mono"
         letterSpacing="0.08em"
         lineHeight="1"
+        role="spinbutton"
+        aria-valuemin={min}
+        aria-valuemax={max}
+        aria-valuenow={value}
+        aria-label={label ?? "value"}
+        tabIndex={0}
       >
         {String(value).padStart(2, "0")}
       </Text>
@@ -110,7 +118,7 @@ function InlineStepper({
         style={btnStyle}
         onMouseEnter={(e) => { e.currentTarget.style.opacity = "1"; }}
         onMouseLeave={(e) => { e.currentTarget.style.opacity = "0.7"; }}
-        aria-label="Decrease"
+        aria-label={`Decrease ${label ?? "value"}`}
       >
         <ChevronDown />
       </button>
@@ -167,6 +175,7 @@ export function TimerDisplay({ minutes, seconds, label, isEditable = false }: Ti
             max={60}
             onChange={setTempWork}
             onDone={confirmWork}
+            label="focus minutes"
           />
           <Text fontSize="timer" fontWeight="light" color="fg" fontFamily="mono" opacity={0.3} lineHeight="1">
             :
@@ -176,21 +185,23 @@ export function TimerDisplay({ minutes, seconds, label, isEditable = false }: Ti
           </Text>
         </HStack>
       ) : (
-        <Text
-          fontSize="timer"
-          fontWeight="light"
-          color="fg"
-          fontFamily="mono"
-          letterSpacing="0.08em"
-          lineHeight="1"
-          opacity={0.9}
-          onClick={isEditable ? openWorkEdit : undefined}
-          cursor={isEditable ? "pointer" : "default"}
-          transition="opacity 0.15s"
-          _hover={isEditable ? { opacity: 1 } : {}}
-        >
-          {timeStr}
-        </Text>
+        <div role="timer" aria-live="polite" aria-atomic="true">
+          <Text
+            fontSize="timer"
+            fontWeight="light"
+            color="fg"
+            fontFamily="mono"
+            letterSpacing="0.08em"
+            lineHeight="1"
+            opacity={0.9}
+            onClick={isEditable ? openWorkEdit : undefined}
+            cursor={isEditable ? "pointer" : "default"}
+            transition="opacity 0.15s"
+            _hover={isEditable ? { opacity: 1 } : {}}
+          >
+            {timeStr}
+          </Text>
+        </div>
       )}
 
       {/* Label / break duration */}
@@ -203,6 +214,7 @@ export function TimerDisplay({ minutes, seconds, label, isEditable = false }: Ti
             onChange={setTempBreak}
             onDone={confirmBreak}
             fontSize="sm"
+            label="break minutes"
           />
           <Text fontSize="xs" color="fg.muted" textTransform="uppercase" letterSpacing="0.2em" opacity={0.7}>
             min break
