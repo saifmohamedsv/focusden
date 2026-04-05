@@ -1,10 +1,9 @@
 -- Create sessions table
 create table public.sessions (
   id uuid primary key default gen_random_uuid(),
-  user_id uuid references public.users(id) on delete cascade not null,
+  user_id uuid references public.user_profiles(id) on delete cascade not null,
   space_id uuid references public.spaces(id) not null,
   project_name text not null default '',
-  mood text check (mood in ('focused', 'calm', 'anxious', 'restless')),
   duration_minutes integer not null default 0,
   todos_completed integer not null default 0,
   started_at timestamptz not null,
@@ -19,7 +18,7 @@ create policy "Users can read own sessions"
   on public.sessions for select
   using (
     user_id in (
-      select id from public.users where google_id = auth.uid()::text
+      select id from public.user_profiles where google_id = auth.uid()::text
     )
   );
 
@@ -28,7 +27,7 @@ create policy "Users can insert own sessions"
   on public.sessions for insert
   with check (
     user_id in (
-      select id from public.users where google_id = auth.uid()::text
+      select id from public.user_profiles where google_id = auth.uid()::text
     )
   );
 
