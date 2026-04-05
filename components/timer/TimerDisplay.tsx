@@ -131,8 +131,6 @@ export function TimerDisplay({ minutes, seconds, label, isEditable = false }: Ti
   const breakDuration = useAppStore((s) => s.breakDuration);
   const setWorkDuration = useAppStore((s) => s.setWorkDuration);
   const setBreakDuration = useAppStore((s) => s.setBreakDuration);
-  const setMood = useAppStore((s) => s.setMood);
-
   const [editingWork, setEditingWork] = useState(false);
   const [editingBreak, setEditingBreak] = useState(false);
   const [tempWork, setTempWork] = useState(workDuration);
@@ -154,15 +152,13 @@ export function TimerDisplay({ minutes, seconds, label, isEditable = false }: Ti
 
   const confirmWork = useCallback(() => {
     setWorkDuration(tempWork);
-    setMood(null);
     setEditingWork(false);
-  }, [tempWork, setWorkDuration, setMood]);
+  }, [tempWork, setWorkDuration]);
 
   const confirmBreak = useCallback(() => {
     setBreakDuration(tempBreak);
-    setMood(null);
     setEditingBreak(false);
-  }, [tempBreak, setBreakDuration, setMood]);
+  }, [tempBreak, setBreakDuration]);
 
   return (
     <Box textAlign="center">

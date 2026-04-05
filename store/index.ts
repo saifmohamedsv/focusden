@@ -51,11 +51,18 @@ export const useAppStore = create<AppStore>()(
         notesContent: state.notesContent,
         todos: state.todos,
         soundTracks: state.soundTracks,
-        mood: state.mood,
         projectName: state.projectName,
         workDuration: state.workDuration,
         breakDuration: state.breakDuration,
       }),
+      onRehydrateStorage: () => (state) => {
+        // After hydration, sync timeRemaining to the persisted workDuration.
+        // timerStatus is not persisted (always "idle" on load), so
+        // timeRemaining must match workDuration to show 0% progress.
+        if (state) {
+          state.timeRemaining = state.workDuration * 60;
+        }
+      },
     },
   ),
 );

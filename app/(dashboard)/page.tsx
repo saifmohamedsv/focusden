@@ -4,7 +4,6 @@ import { Box, VStack, HStack, Text } from "@chakra-ui/react";
 import { SpaceBackground } from "@/components/spaces/SpaceBackground";
 import { SpaceGrid } from "@/components/spaces/SpaceGrid";
 import { WorkspaceLayout } from "@/components/layout/WorkspaceLayout";
-import { MoodPicker } from "@/components/mood/MoodPicker";
 import { PomodoroRing } from "@/components/timer/PomodoroRing";
 import { TimerDisplay } from "@/components/timer/TimerDisplay";
 import { TimerControls } from "@/components/timer/TimerControls";
@@ -20,11 +19,11 @@ import { useAppStore } from "@/store";
 import { getSpaceById } from "@/lib/supabase/spaces";
 
 function FocusWorkspace() {
-  const { minutes, seconds, progress, timerStatus, currentRound, lastFocusDuration, isTransition } = useTimer();
+  const { minutes, seconds, progress, timerStatus, currentRound, lastFocusDuration, isTransition, timerPhase } = useTimer();
   const activeSpaceId = useAppStore((s) => s.activeSpaceId);
   const todos = useAppStore((s) => s.todos);
   const activeSpace = getSpaceById(activeSpaceId);
-  const isBreak = timerStatus === "break";
+  const isBreak = timerPhase === "break";
   const timerLabel = isBreak ? "Break" : "Focus";
   const todosCompletedCount = todos.filter((t) => t.completed).length;
 
@@ -55,8 +54,6 @@ function FocusWorkspace() {
           )}
         </HStack>
 
-        {/* Mood picker — visually separate from timer zone */}
-        <MoodPicker />
       </VStack>
 
       {/* Timer zone — the cozy center of the experience */}

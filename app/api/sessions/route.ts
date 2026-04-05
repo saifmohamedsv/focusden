@@ -6,7 +6,6 @@ import { createServerSupabase } from "@/lib/supabase/server";
 const sessionBodySchema = z.object({
   space_id: z.string().uuid(),
   project_name: z.string(),
-  mood: z.enum(["focused", "calm", "anxious", "restless"]).nullable(),
   duration_minutes: z.number().int(),
   todos_completed: z.number().int(),
   started_at: z.string(),
@@ -53,7 +52,6 @@ export async function POST(request: NextRequest) {
     user_id: userProfile.id,
     space_id: data.space_id,
     project_name: data.project_name,
-    mood: data.mood,
     duration_minutes: data.duration_minutes,
     todos_completed: data.todos_completed,
     started_at: data.started_at,

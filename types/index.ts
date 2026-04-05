@@ -43,8 +43,6 @@ export interface Todo {
 
 export type TimerStatus = 'idle' | 'running' | 'paused' | 'break' | 'transition_to_break' | 'transition_to_focus';
 
-export type Mood = 'focused' | 'calm' | 'anxious' | 'restless';
-
 export type CompanionState = 'working' | 'celebrating' | 'idle' | 'stretching';
 
 export interface Session {
@@ -52,7 +50,6 @@ export interface Session {
   user_id: string;
   space_id: string;
   project_name: string;
-  mood: Mood | null;
   duration_minutes: number;
   todos_completed: number;
   started_at: string;
@@ -75,10 +72,3 @@ export interface SessionStats {
   projects_this_week: string[];
   session_count: number;
 }
-
-export const MOOD_CONFIGS: Record<Mood, { workMinutes: number; breakMinutes: number; sounds: string[] }> = {
-  focused: { workMinutes: 25, breakMinutes: 5, sounds: ['cafe', 'forest'] },
-  calm: { workMinutes: 30, breakMinutes: 7, sounds: ['rain', 'waves'] },
-  anxious: { workMinutes: 15, breakMinutes: 5, sounds: ['rain', 'delta'] },
-  restless: { workMinutes: 10, breakMinutes: 3, sounds: ['cafe', 'fire'] },
-};
