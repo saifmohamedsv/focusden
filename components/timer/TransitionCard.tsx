@@ -32,8 +32,12 @@ export function TransitionCard({ mode, lastFocusDuration, todosCompletedCount }:
   const [progress, setProgress] = useState(0);
   const startTimeRef = useRef<number>(Date.now());
   const rafRef = useRef<number | null>(null);
+  const cancelledRef = useRef(false);
 
   const primaryAction = useCallback(() => {
+    if (cancelledRef.current) return;
+    cancelledRef.current = true;
+    if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
     if (mode === "focus_complete") {
       switchToBreak();
     } else {
@@ -41,10 +45,17 @@ export function TransitionCard({ mode, lastFocusDuration, todosCompletedCount }:
     }
   }, [mode, switchToBreak, switchToWork]);
 
+  const cancelAutoContinue = useCallback(() => {
+    cancelledRef.current = true;
+    if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+  }, []);
+
   useEffect(() => {
     startTimeRef.current = Date.now();
+    cancelledRef.current = false;
 
     function tick() {
+      if (cancelledRef.current) return;
       const elapsed = (Date.now() - startTimeRef.current) / 1000;
       const p = Math.min(elapsed / AUTO_CONTINUE_SECONDS, 1);
       setProgress(p);
@@ -225,6 +236,7 @@ export function TransitionCard({ mode, lastFocusDuration, todosCompletedCount }:
         {/* Secondary action */}
         <button
           onClick={() => {
+            cancelAutoContinue();
             if (isFocusComplete) {
               continueWorking();
             } else {
@@ -253,7 +265,7 @@ export function TransitionCard({ mode, lastFocusDuration, todosCompletedCount }:
       {/* End session — visible from round 3 onwards */}
       {showEndSession && (
         <button
-          onClick={() => setShowSummary(true)}
+          onClick={() => { cancelAutoContinue(); setShowSummary(true); }}
           style={{
             marginTop: "12px",
             width: "100%",

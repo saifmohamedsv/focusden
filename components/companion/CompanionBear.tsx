@@ -27,14 +27,15 @@ export function CompanionBear() {
   const prevTimerStatus = useRef(timerStatus);
 
   useEffect(() => {
-    if (prevTimerStatus.current === "running" && timerStatus === "break") {
+    if (timerStatus === "transition_to_break") {
+      // Work session just ended — celebrate!
       setCompanionState("celebrating");
       celebrationTimer.current = setTimeout(() => {
         setCompanionState("stretching");
       }, 3000);
     } else if (timerStatus === "running") {
       setCompanionState("working");
-    } else if (timerStatus === "break") {
+    } else if (timerStatus === "break" || timerStatus === "transition_to_focus") {
       setCompanionState("stretching");
     } else if (timerStatus === "idle" || timerStatus === "paused") {
       if (companionState !== "celebrating") {

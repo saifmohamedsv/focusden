@@ -10,9 +10,10 @@ interface PomodoroRingProps {
 }
 
 export function PomodoroRing({ progress, size = 300, strokeWidth = 5, isBreak = false }: PomodoroRingProps) {
+  const clampedProgress = Math.max(0, Math.min(1, progress));
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
-  const offset = circumference * (1 - progress);
+  const offset = circumference * (1 - clampedProgress);
   const accentColor = isBreak ? "var(--chakra-colors-sage-300, #6B8F71)" : "var(--color-accent)";
 
   return (
@@ -20,7 +21,7 @@ export function PomodoroRing({ progress, size = 300, strokeWidth = 5, isBreak = 
       position="relative"
       width={`${size}px`}
       height={`${size}px`}
-      filter={progress > 0 ? `drop-shadow(0 0 20px ${isBreak ? "rgba(107, 143, 113, 0.15)" : "rgba(200, 137, 74, 0.15)"})` : "none"}
+      filter={clampedProgress > 0 ? `drop-shadow(0 0 20px ${isBreak ? "rgba(107, 143, 113, 0.15)" : "rgba(200, 137, 74, 0.15)"})` : "none"}
       transition="filter 0.6s ease"
     >
       <svg width={size} height={size} style={{ transform: "rotate(-90deg)" }}>

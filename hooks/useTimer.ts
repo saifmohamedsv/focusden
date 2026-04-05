@@ -24,6 +24,7 @@ function stopGlobalInterval() {
 
 export function useTimer() {
   const timerStatus = useAppStore((s) => s.timerStatus);
+  const timerPhase = useAppStore((s) => s.timerPhase);
   const timeRemaining = useAppStore((s) => s.timeRemaining);
   const workDuration = useAppStore((s) => s.workDuration);
   const breakDuration = useAppStore((s) => s.breakDuration);
@@ -36,6 +37,7 @@ export function useTimer() {
   const isTransition =
     timerStatus === "transition_to_break" || timerStatus === "transition_to_focus";
 
+  // Manage the global tick interval
   useEffect(() => {
     intervalOwnerCount++;
     return () => {
@@ -47,7 +49,6 @@ export function useTimer() {
   }, []);
 
   useEffect(() => {
-    // Only tick during active running/break states — not during transitions
     if (timerStatus === "running" || timerStatus === "break") {
       startGlobalInterval();
     } else {
@@ -55,8 +56,23 @@ export function useTimer() {
     }
   }, [timerStatus]);
 
+  // Sync to wall clock when tab becomes visible again (handles browser
+  // throttling of background tabs and long sleeps)
+  useEffect(() => {
+    function handleVisibility() {
+      if (document.visibilityState === "visible") {
+        const state = useAppStore.getState();
+        if (state.timerStatus === "running" || state.timerStatus === "break") {
+          state.syncToWallClock();
+        }
+      }
+    }
+
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () => document.removeEventListener("visibilitychange", handleVisibility);
+  }, []);
+
   const toggleTimer = useCallback(() => {
-    // No-op during transition states
     if (isTransition) return;
     if (timerStatus === "running" || timerStatus === "break") {
       pauseTimer();
@@ -67,7 +83,13 @@ export function useTimer() {
 
   const skipToNext = useCallback(() => {
     if (timerStatus === "running" || timerStatus === "paused") {
-      useAppStore.getState().transitionToBreak();
+      // Skip handles both work-paused and break-paused via timerPhase
+      const phase = useAppStore.getState().timerPhase;
+      if (phase === "break") {
+        useAppStore.getState().transitionToFocus();
+      } else {
+        useAppStore.getState().transitionToBreak();
+      }
     } else if (timerStatus === "break") {
       useAppStore.getState().transitionToFocus();
     }
@@ -75,12 +97,19 @@ export function useTimer() {
 
   const minutes = Math.floor(timeRemaining / 60);
   const seconds = timeRemaining % 60;
-  const progress = timerStatus === "break"
-    ? 1 - timeRemaining / (breakDuration * 60)
-    : 1 - timeRemaining / (workDuration * 60);
+
+  // Progress: 0 when idle, otherwise computed from phase duration, clamped to [0, 1]
+  let progress: number;
+  if (timerStatus === "idle") {
+    progress = 0;
+  } else {
+    const totalSeconds = timerPhase === "break" ? breakDuration * 60 : workDuration * 60;
+    progress = totalSeconds > 0 ? Math.max(0, Math.min(1, 1 - timeRemaining / totalSeconds)) : 0;
+  }
 
   return {
     timerStatus,
+    timerPhase,
     timeRemaining,
     minutes,
     seconds,
