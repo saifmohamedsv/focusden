@@ -29,7 +29,8 @@ export interface SoundTrack {
   id: string;
   name: string;
   icon: string;
-  file: string;
+  /** Audio sources in priority order — Howler.js picks the first supported format */
+  sources: string[];
   volume: number;
   enabled: boolean;
 }

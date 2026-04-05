@@ -51,16 +51,22 @@ export const useAppStore = create<AppStore>()(
         notesContent: state.notesContent,
         todos: state.todos,
         soundTracks: state.soundTracks,
+        masterVolume: state.masterVolume,
         projectName: state.projectName,
         workDuration: state.workDuration,
         breakDuration: state.breakDuration,
       }),
       onRehydrateStorage: () => (state) => {
-        // After hydration, sync timeRemaining to the persisted workDuration.
-        // timerStatus is not persisted (always "idle" on load), so
-        // timeRemaining must match workDuration to show 0% progress.
-        if (state) {
-          state.timeRemaining = state.workDuration * 60;
+        if (!state) return;
+        // Sync timeRemaining to persisted workDuration (timerStatus is not persisted)
+        state.timeRemaining = state.workDuration * 60;
+        // Migrate soundTracks from old `file: string` to `sources: string[]`
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        if (state.soundTracks?.length && "file" in (state.soundTracks[0] as any)) {
+          state.soundTracks = state.soundTracks.map((t) => ({
+            ...t,
+            sources: [`/sounds/${t.id}.m4a`, `/sounds/${t.id}.ogg`],
+          }));
         }
       },
     },
